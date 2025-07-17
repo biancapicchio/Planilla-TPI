@@ -2,188 +2,213 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Malla Interactiva - Plan de Estudios</title>
+  <title>Malla Curricular Interactiva</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #121212;
-      color: #e0f7fa;
-      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0a192f;
+      color: #0a192f;
       padding: 20px;
+      margin: 0;
     }
-
     h1 {
-      color: #82b1ff;
+      color: #ffffff;
       text-align: center;
-      margin-bottom: 20px;
     }
-
-    .contenedor-malla {
+    .contenedor-bloques {
       display: flex;
-      gap: 16px;
+      flex-direction: row;
+      justify-content: space-evenly;
+      align-items: flex-start;
+      flex-wrap: nowrap;
       overflow-x: auto;
-      padding-bottom: 10px;
+      padding: 10px;
+      gap: 20px;
     }
-
     .bloque {
-      flex: 0 0 auto;
-      background-color: #1a1a2e;
-      border-radius: 12px;
-      padding: 12px;
-      min-width: 200px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    }
-
-    .bloque h2 {
-      color: #90caf9;
-      font-size: 16px;
-      margin: 0 0 12px;
-      border-bottom: 1px solid #3949ab;
-      padding-bottom: 6px;
-    }
-
-    .materias {
+      background-color: #112240;
+      width: 250px;
+      min-height: 300px;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      align-items: stretch;
+      flex-shrink: 0;
     }
-
+    .bloque h2 {
+      color: #ffffff;
+      text-align: center;
+      border-bottom: 1px solid #ffffff33;
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
     .materia {
-      background-color: #263238;
-      color: #e0f7fa;
-      border: 2px solid #64b5f6;
-      border-radius: 8px;
-      padding: 8px;
-      font-size: 14px;
+      display: block;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 12px;
+      background-color: #5b7895;
+      border: none;
+      color: #0a192f;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
+      transition: transform 0.1s ease;
     }
-
     .materia:hover {
-      background-color: #37474f;
+      transform: scale(1.02);
     }
-
-    .completada {
-      background-color: #1e88e5 !important;
-      text-decoration: line-through;
-    }
-
     .bloqueada {
-      background-color: #2b2b2b;
+      background-color: #cccccc;
       color: #777;
-      border-color: #555;
       cursor: not-allowed;
+      box-shadow: none;
+    }
+    .completada {
+      background-color: #88aacc;
+      text-decoration: line-through;
     }
   </style>
 </head>
 <body>
-  <h1>Malla Interactiva - Plan de Estudios</h1>
-  <div class="contenedor-malla" id="contenedor"></div>
+  <h1>Tecnicatura en Programacion Informatica</h1>
+  <div class="contenedor-bloques" id="contenedor"></div>
 
   <script>
     const materias = [
-      // Ciclo Introductorio
-      { nombre: "Lectura y escritura académica", bloque: "Ciclo introductorio", correlativas: [] },
-      { nombre: "Matemática", bloque: "Ciclo introductorio", correlativas: [] },
-      { nombre: "Elementos de programación y lógica", bloque: "Ciclo introductorio", correlativas: [] },
+      // Ciclo introductorio
+      { id: "lectura", nombre: "Lectura y escritura académica", correlativas: [], bloque: "Ciclo Introductorio" },
+      { id: "matematica", nombre: "Matemática", correlativas: [], bloque: "Ciclo Introductorio" },
+      { id: "logica", nombre: "Elementos de programación y lógica", correlativas: [], bloque: "Ciclo Introductorio" },
 
-      // Núcleo Básico
-      { nombre: "Introducción a la Programación", bloque: "Núcleo básico", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
-      { nombre: "Organización de Computadoras", bloque: "Núcleo básico", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
-      { nombre: "Matemática I", bloque: "Núcleo básico", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
-      { nombre: "Bases de Datos", bloque: "Núcleo básico", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
-      { nombre: "Programación con Objetos I", bloque: "Núcleo básico", correlativas: ["Introducción a la Programación"] },
-      { nombre: "Estructuras de Datos", bloque: "Núcleo básico", correlativas: ["Introducción a la Programación"] },
-      { nombre: "Programación con Objetos II", bloque: "Núcleo básico", correlativas: ["Programación con Objetos I"] },
+      // Núcleo básico
+      { id: "intro_prog", nombre: "Introducción a la Programación", correlativas: ["logica", "matematica", "lectura"], bloque: "Núcleo Básico" },
+      { id: "orga", nombre: "Organización de Computadoras", correlativas: ["logica", "matematica", "lectura"], bloque: "Núcleo Básico" },
+      { id: "mate1", nombre: "Matemática I", correlativas: ["logica", "matematica", "lectura"], bloque: "Núcleo Básico" },
+      { id: "poo1", nombre: "Programación con Objetos I", correlativas: ["intro_prog"], bloque: "Núcleo Básico" },
+      { id: "bd", nombre: "Bases de Datos", correlativas: ["logica", "matematica", "lectura"], bloque: "Núcleo Básico" },
+      { id: "ed", nombre: "Estructuras de Datos", correlativas: ["intro_prog"], bloque: "Núcleo Básico" },
+      { id: "poo2", nombre: "Programación con Objetos II", correlativas: ["poo1"], bloque: "Núcleo Básico" },
 
-      // Núcleo Avanzado (requiere 3 del básico)
-      { nombre: "Redes de Computadoras", bloque: "Núcleo avanzado", correlativas: ["Organización de Computadoras"] },
-      { nombre: "Sistemas Operativos", bloque: "Núcleo avanzado", correlativas: ["Introducción a la Programación", "Organización de Computadoras"] },
-      { nombre: "Programación Concurrente", bloque: "Núcleo avanzado", correlativas: ["Estructuras de Datos"] },
-      { nombre: "Matemática II", bloque: "Núcleo avanzado", correlativas: ["Matemática I"] },
-      { nombre: "Elementos de Ingeniería de Software", bloque: "Núcleo avanzado", correlativas: ["Programación con Objetos II"] },
-      { nombre: "Construcción de Interfaces de Usuario", bloque: "Núcleo avanzado", correlativas: ["Programación con Objetos II"] },
-      { nombre: "Estrategias de Persistencia", bloque: "Núcleo avanzado", correlativas: ["Bases de Datos", "Programación con Objetos II"] },
-      { nombre: "Programación Funcional", bloque: "Núcleo avanzado", correlativas: ["Estructuras de Datos"] },
-      { nombre: "Desarrollo de Aplicaciones", bloque: "Núcleo avanzado", correlativas: ["Elementos de Ingeniería de Software", "Construcción de Interfaces de Usuario", "Estrategias de Persistencia"] },
-      { nombre: "Laboratorio de Sistemas Operativos y Redes", bloque: "Núcleo avanzado", correlativas: ["Redes de Computadoras", "Sistemas Operativos"] },
+      // Obligatorios
+      { id: "ingles1", nombre: "Inglés I", correlativas: ["logica", "matematica", "lectura"], bloque: "Obligatorios" },
+      { id: "ingles2", nombre: "Inglés II", correlativas: ["ingles1"], bloque: "Obligatorios" },
 
-      // Núcleo Complementario (solo nombres, desbloqueo condicional puede agregarse después)
-      { nombre: "Seguridad Informática", bloque: "Núcleo complementario", correlativas: [] },
-      { nombre: "Taller de Trabajo Universitario", bloque: "Núcleo complementario", correlativas: [] },
-      { nombre: "Bases de Datos II", bloque: "Núcleo complementario", correlativas: [] },
+      // Núcleo avanzado (requiere 3 del básico completadas)
+      { id: "redes", nombre: "Redes de Computadoras", correlativas: ["orga"], bloque: "Núcleo Avanzado" },
+      { id: "so", nombre: "Sistemas Operativos", correlativas: ["intro_prog", "orga"], bloque: "Núcleo Avanzado" },
+      { id: "concurrente", nombre: "Programación Concurrente", correlativas: ["ed"], bloque: "Núcleo Avanzado" },
+      { id: "mate2", nombre: "Matemática II", correlativas: ["mate1"], bloque: "Núcleo Avanzado" },
+      { id: "eis", nombre: "Elementos de Ingeniería de Software", correlativas: ["poo2"], bloque: "Núcleo Avanzado" },
+      { id: "ui", nombre: "Construcción de Interfaces de Usuario", correlativas: ["poo2"], bloque: "Núcleo Avanzado" },
+      { id: "persistencia", nombre: "Estrategias de Persistencia", correlativas: ["bd", "poo2"], bloque: "Núcleo Avanzado" },
+      { id: "funcional", nombre: "Programación Funcional", correlativas: ["ed"], bloque: "Núcleo Avanzado" },
+      { id: "dap", nombre: "Desarrollo de Aplicaciones", correlativas: ["eis", "ui", "persistencia"], bloque: "Núcleo Avanzado" },
+      { id: "labso", nombre: "Laboratorio de Sistemas Operativos y Redes", correlativas: ["redes", "so"], bloque: "Núcleo Avanzado" },
 
-      // Trabajo final
-      { nombre: "TIP", bloque: "Trabajo final", correlativas: ["Seguridad Informática", "Taller de Trabajo Universitario", "Bases de Datos II"] },
+      // Núcleo complementario (requiere 5 del avanzado completadas)
+      { id: "seguridad", nombre: "Seguridad Informática", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "taller_tu", nombre: "Taller de Trabajo Universitario", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "bd2", nombre: "Bases de Datos II", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "proy_sl", nombre: "Participación y Gestión en Proyectos de Software Libre", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "arquitecturas", nombre: "Introducción a las Arquitecturas de Software", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "poo3", nombre: "Programación con Objetos III", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "bioinfo", nombre: "Introducción a la Bioinformática", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "politicas", nombre: "Políticas Públicas en la Sociedad de la Información y la Era Digital", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "sig", nombre: "Sistemas de Información Geográfica", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "herramientas_decl", nombre: "Herramientas declarativas en Programación", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "desarrollo_videojuegos", nombre: "Introducción al Desarrollo de Videojuegos", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "derechos", nombre: "Derechos de Autor y Derecho de Copia en la Era Digital", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "arduino", nombre: "Controladores con Arduino", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "herramientas_tecnicas", nombre: "Herramientas o Técnicas Puntuales", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "logica_prog", nombre: "Lógica y Programación", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "gestion_proy", nombre: "Gestión de Proyectos de Desarrollo de Software", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "practica_ds", nombre: "Práctica del Desarrollo de Software", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "lfya", nombre: "Lenguajes Formales y Autómatas", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "algoritmos", nombre: "Algoritmos", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "ing_req", nombre: "Ingeniería de Requerimientos", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "sistemas_dist", nombre: "Sistemas Distribuidos", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "caract_lang", nombre: "Características de Lenguajes de Programación", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "arquitectura_comp", nombre: "Arquitectura de Computadoras", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "aspectos_leg", nombre: "Aspectos Legales y Sociales", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "tv_digital", nombre: "Televisión Digital", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "streaming", nombre: "Tecnología de Streaming sobre Internet", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "taller_web", nombre: "Taller de Desarrollos de Servicios Web", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "prog_bajo_nivel", nombre: "Programación a Bajo Nivel", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "taller_ti", nombre: "Taller de Trabajo Intelectual", correlativas: [], bloque: "Núcleo Complementario" },
+      { id: "blockchain", nombre: "Introducción a Blockchain", correlativas: [], bloque: "Núcleo Complementario" },
 
-      // Otros requisitos
-      { nombre: "Inglés I", bloque: "Otros", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
-      { nombre: "Inglés II", bloque: "Otros", correlativas: ["Inglés I"] },
+      // Trabajo de Inserción Profesional (requiere 3 del complementario y obligatorios)
+      { id: "tip", nombre: "Trabajo de Inserción Profesional (TIP)", correlativas: [], bloque: "TIP" }
     ];
 
     const completadas = new Set();
 
-    function puedeDesbloquear(materia) {
-      return materia.correlativas.every(c => completadas.has(c));
+    function cantidadCompletadas(bloque) {
+      return materias.filter(m => m.bloque === bloque && completadas.has(m.id)).length;
     }
 
-    function renderMalla() {
-      const contenedor = document.getElementById('contenedor');
-      contenedor.innerHTML = '';
+    function puedeDesbloquear(materia) {
+      if (materia.bloque === "Núcleo Avanzado") {
+        return materia.correlativas.every(id => completadas.has(id)) && cantidadCompletadas("Núcleo Básico") >= 3;
+      }
+      if (materia.bloque === "Núcleo Complementario") {
+        // Las correlativas de complementario son vacías, así que solo chequeamos la cantidad de avanzadas completadas
+        return cantidadCompletadas("Núcleo Avanzado") >= 5;
+      }
+      if (materia.bloque === "TIP") {
+        return cantidadCompletadas("Núcleo Complementario") >= 3 && completadas.has("ingles2");
+      }
+      // Para el resto (Ciclo Introductorio, Básico, Obligatorios)
+      return materia.correlativas.every(id => completadas.has(id));
+    }
 
-      const bloquesOrden = [
-        "Ciclo introductorio",
-        "Núcleo básico",
-        "Núcleo avanzado",
-        "Núcleo complementario",
-        "Trabajo final",
-        "Otros"
-      ];
+    function render() {
+      const contenedor = document.getElementById("contenedor");
+      contenedor.innerHTML = "";
 
-      for (const bloque of bloquesOrden) {
-        const bloqueMaterias = materias.filter(m => m.bloque === bloque);
-        const bloqueDiv = document.createElement('div');
-        bloqueDiv.className = 'bloque';
+      const bloques = ["Ciclo Introductorio", "Núcleo Básico", "Núcleo Avanzado", "Núcleo Complementario", "Obligatorios", "TIP"];
 
-        const titulo = document.createElement('h2');
+      for (const bloque of bloques) {
+        const divBloque = document.createElement("div");
+        divBloque.className = "bloque";
+
+        const titulo = document.createElement("h2");
         titulo.textContent = bloque;
-        bloqueDiv.appendChild(titulo);
+        divBloque.appendChild(titulo);
 
-        const lista = document.createElement('div');
-        lista.className = 'materias';
+        const materiasDelBloque = materias.filter(m => m.bloque === bloque);
 
-        for (const mat of bloqueMaterias) {
-          const btn = document.createElement('div');
-          btn.textContent = mat.nombre;
-          btn.className = 'materia';
+        materiasDelBloque.forEach(materia => {
+          const btn = document.createElement("button");
+          btn.textContent = materia.nombre;
+          btn.className = "materia";
 
-          if (!puedeDesbloquear(mat) && !completadas.has(mat.nombre)) {
-            btn.classList.add('bloqueada');
-          } else if (completadas.has(mat.nombre)) {
-            btn.classList.add('completada');
+          if (completadas.has(materia.id)) {
+            btn.classList.add("completada");
+          } else if (!puedeDesbloquear(materia)) {
+            btn.classList.add("bloqueada");
+            btn.disabled = true;
           }
 
           btn.onclick = () => {
-            if (!puedeDesbloquear(mat)) return;
-            if (completadas.has(mat.nombre)) {
-              completadas.delete(mat.nombre);
-            } else {
-              completadas.add(mat.nombre);
+            if (!completadas.has(materia.id) && puedeDesbloquear(materia)) {
+              completadas.add(materia.id);
+              render();
             }
-            renderMalla();
           };
 
-          lista.appendChild(btn);
-        }
+          divBloque.appendChild(btn);
+        });
 
-        bloqueDiv.appendChild(lista);
-        contenedor.appendChild(bloqueDiv);
+        contenedor.appendChild(divBloque);
       }
     }
 
-    renderMalla();
+    render();
   </script>
 </body>
 </html>
+
 
