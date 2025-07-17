@@ -176,11 +176,22 @@
       const contenedor = document.getElementById("contenedor");
       contenedor.innerHTML = "";
 
-      const bloques = ["Ciclo Introductorio", "Núcleo Básico", "Núcleo Avanzado", "Núcleo Complementario", "Obligatorios", "TIP"];
-
-      for (const bloque of bloques) {
+      const ordenBloques = [
+        { nombre: "Ciclo Introductorio", clase: "intro" },
+        { nombre: "Núcleo Básico", clase: "basico" },
+        { nombre: "Núcleo Avanzado", clase: "avanzado" },
+        { nombre: "Núcleo Complementario A", clase: "comple1" },
+        { nombre: "Núcleo Complementario B", clase: "comple2" },
+        { nombre: "Obligatorios", clase: "obligatorios" },
+        { nombre: "TIP", clase: "tip" }
+      ];
+      
+      for (const { nombre, clase } of ordenBloques) {
         const divBloque = document.createElement("div");
-        divBloque.className = "bloque";
+        divBloque.className = `bloque ${clase}`;
+        const h2 = document.createElement("h2");
+        h2.textContent = nombre;
+        divBloque.appendChild(h2);
 
         const titulo = document.createElement("h2");
         titulo.textContent = bloque;
