@@ -11,25 +11,45 @@
       margin: 0;
       padding: 20px;
     }
-    h2 {
+    h1 {
       color: #0d47a1;
+      text-align: center;
+    }
+    h2 {
+      color: #1565c0;
+      margin-bottom: 10px;
+    }
+    .contenedor-malla {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      overflow-x: auto;
     }
     .bloque {
-      margin-bottom: 40px;
+      flex: 0 0 auto;
+      background-color: #bbdefb;
+      border-radius: 10px;
+      padding: 15px;
+      min-width: 250px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
     .materias {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      flex-direction: column;
+      gap: 8px;
     }
     .materia {
       padding: 10px;
       border-radius: 8px;
-      background-color: #bbdefb;
+      background-color: #e3f2fd;
       color: #0d47a1;
       border: 2px solid #90caf9;
       cursor: pointer;
       user-select: none;
+      transition: background-color 0.3s;
+    }
+    .materia:hover {
+      background-color: #bbdefb;
     }
     .completada {
       background-color: #64b5f6;
@@ -45,8 +65,7 @@
 </head>
 <body>
   <h1>Malla Interactiva - Plan de Estudios</h1>
-
-  <div id="contenedor"></div>
+  <div class="contenedor-malla" id="contenedor"></div>
 
   <script>
     const materias = [
@@ -86,8 +105,7 @@
       // Núcleo complementario (simulado sin correlativas específicas)
       { id: "comp1", nombre: "Seguridad Informática", bloque: "Núcleo complementario", correlativas: [] },
       { id: "comp2", nombre: "Taller de Trabajo Universitario", bloque: "Núcleo complementario", correlativas: [] },
-      { id: "comp3", nombre: "Bases de Datos II", bloque: "Núcleo complementario", correlativas: [] },
-      // ... podés completar el resto si querés
+      { id: "comp3", nombre: "Bases de Datos II", bloque: "Núcleo complementario", correlativas: [] }
     ];
 
     let completadas = new Set();
