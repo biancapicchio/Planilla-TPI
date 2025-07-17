@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <title>Malla Curricular Interactiva</title>
@@ -11,32 +12,67 @@
       padding: 20px;
       margin: 0;
     }
+
     h1 {
       color: #ffffff;
       text-align: center;
     }
+
     .contenedor-bloques {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-      align-items: flex-start;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding: 10px;
+      display: grid;
+      justify-content: center;
+      /* si queres cambiar el orden de las columnas, solo copia una columna entera e intercambiala con otra*/
+      grid-template-areas:
+        "ciclo-introductorio  nucleo-avanzado nucleo-complementario"
+        "nucleo-basico        obligatorios    nucleo-complementario"
+        "nucleo-basico        tip             nucleo-complementario";
+      grid-template-columns: max-content max-content max-content;
+      grid-template-rows: auto auto auto;
+      align-items: start;
       gap: 20px;
     }
+
+    #ciclo-introductorio {
+      grid-area: ciclo-introductorio;
+    }
+
+    #nucleo-basico {
+      margin-top: -680px;
+      grid-area: nucleo-basico;
+    }
+
+    #nucleo-avanzado {
+      grid-area: nucleo-avanzado;
+    }
+
+    #nucleo-complementario {
+      grid-area: nucleo-complementario;
+    }
+
+    #obligatorios {
+      margin-top: -340px;
+      grid-area: obligatorios;
+    }
+
+    #tip {
+      margin-top: -500px;
+      grid-area: tip;
+    }
+
     .bloque {
       background-color: #112240;
       width: 250px;
-      min-height: 300px;
-      padding: 15px;
-      border-radius: 15px;
+      height: auto;
+      padding: 16px;
+      border-radius: 16px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       display: flex;
       flex-direction: column;
-      align-items: stretch;
-      flex-shrink: 0;
+      gap: 12px;
+      margin: 0;
+      padding: 12px;
     }
+
     .bloque h2 {
       color: #ffffff;
       text-align: center;
@@ -44,10 +80,10 @@
       padding-bottom: 10px;
       margin-top: 0;
     }
+
     .materia {
       display: block;
       padding: 10px;
-      margin: 8px 0;
       border-radius: 12px;
       background-color: #5b7895;
       border: none;
@@ -56,23 +92,57 @@
       cursor: pointer;
       transition: transform 0.1s ease;
     }
+
     .materia:hover {
       transform: scale(1.02);
     }
+
     .bloqueada {
       background-color: #cccccc;
       color: #777;
       cursor: not-allowed;
       box-shadow: none;
     }
+
     .completada {
       background-color: #88aacc;
       text-decoration: line-through;
     }
+
+    #limpiar-todo {
+      background-color: transparent;
+      border: none;
+      font-weight: bold;
+      color: rgb(243, 243, 243);
+      transition: scale .3s ease-in-out;
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: #2f7fd0;
+      z-index: 1;
+    }
+
+    #limpiar-todo img {
+      width: 32px;
+      height: 32px;
+    }
+
+    #limpiar-todo:hover {
+      background-color: #4c94db;
+      cursor: pointer;
+      scale: 1.02;
+    }
   </style>
 </head>
+
 <body>
   <h1>Tecnicatura en Programacion Informatica</h1>
+  <button id="limpiar-todo" title="Limpiar Progreso">
+    <img src="assets/trash-can-svgrepo-com.svg" alt="Limpiar Progreso">
+  </button>
   <div class="contenedor-bloques" id="contenedor"></div>
 
   <script>
@@ -143,7 +213,13 @@
       { id: "tip", nombre: "Trabajo de Inserción Profesional (TIP)", correlativas: [], bloque: "TIP" }
     ];
 
-    const completadas = new Set();
+    let completadas = new Set();
+    const completadasLocal = localStorage.getItem("completadas")
+    if (completadasLocal) {
+      const array = JSON.parse(completadasLocal);
+      console.log("array", typeof array, array)
+      completadas = new Set(array);
+    }
 
     function cantidadCompletadas(bloque) {
       return materias.filter(m => m.bloque === bloque && completadas.has(m.id)).length;
@@ -164,6 +240,11 @@
       return materia.correlativas.every(id => completadas.has(id));
     }
 
+    function formatearIdDelBloque(bloque) {
+      const bloqueFormateado = bloque.replace("ú", "u").replace("á", "a").replace(" ", "-")
+      return (bloqueFormateado.toLowerCase())
+    }
+
     function render() {
       const contenedor = document.getElementById("contenedor");
       contenedor.innerHTML = "";
@@ -173,6 +254,8 @@
       for (const bloque of bloques) {
         const divBloque = document.createElement("div");
         divBloque.className = "bloque";
+        divBloque.id = formatearIdDelBloque(String(bloque))
+        console.log(formatearIdDelBloque(String(bloque)))
 
         const titulo = document.createElement("h2");
         titulo.textContent = bloque;
@@ -195,8 +278,13 @@
           btn.onclick = () => {
             if (!completadas.has(materia.id) && puedeDesbloquear(materia)) {
               completadas.add(materia.id);
-              render();
+              btn.classList.add("completada");
+              localStorage.setItem("completadas", JSON.stringify([...completadas]))
+            } else if (puedeDesbloquear(materia)) {
+              completadas.delete(materia.id);
+              btn.classList = "materia";
             }
+            render();
           };
 
           divBloque.appendChild(btn);
@@ -207,7 +295,16 @@
     }
 
     render();
+
+    const limpiarBtn = document.getElementById("limpiar-todo");
+    if (limpiarBtn) {
+      limpiarBtn.addEventListener("click", () => {
+        completadas.clear();
+        localStorage.setItem("completadas", null);
+        render();
+      })
+    }
   </script>
 </body>
-</html>
 
+</html>
