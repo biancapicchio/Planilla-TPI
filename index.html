@@ -1,66 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Malla Interactiva - Plan de Estudios</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background: #121212;
       color: #e0f7fa;
       margin: 0;
       padding: 20px;
     }
+
     h1 {
       color: #82b1ff;
       text-align: center;
+      margin-bottom: 20px;
     }
-    h2 {
-      color: #90caf9;
-      margin-bottom: 10px;
-    }
+
     .contenedor-malla {
       display: flex;
-      flex-direction: row;
-      gap: 12px;
+      gap: 16px;
       overflow-x: auto;
+      padding-bottom: 10px;
     }
+
     .bloque {
       flex: 0 0 auto;
-      background-color: #1e1e2f;
-      border-radius: 10px;
-      padding: 10px;
+      background-color: #1a1a2e;
+      border-radius: 12px;
+      padding: 12px;
       min-width: 200px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
+
+    .bloque h2 {
+      color: #90caf9;
+      font-size: 16px;
+      margin: 0 0 12px;
+      border-bottom: 1px solid #3949ab;
+      padding-bottom: 6px;
+    }
+
     .materias {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
+
     .materia {
-      padding: 8px;
-      border-radius: 8px;
       background-color: #263238;
       color: #e0f7fa;
       border: 2px solid #64b5f6;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s;
+      border-radius: 8px;
+      padding: 8px;
       font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
     }
+
     .materia:hover {
       background-color: #37474f;
     }
+
     .completada {
-      background-color: #1e88e5;
+      background-color: #1e88e5 !important;
       text-decoration: line-through;
     }
+
     .bloqueada {
-      background-color: #424242;
-      color: #9e9e9e;
-      border-color: #616161;
+      background-color: #2b2b2b;
+      color: #777;
+      border-color: #555;
       cursor: not-allowed;
     }
   </style>
@@ -71,97 +83,107 @@
 
   <script>
     const materias = [
-      // Ciclo introductorio
-      { id: "lectura", nombre: "Lectura y escritura académica", bloque: "Ciclo introductorio", correlativas: [] },
-      { id: "matematica", nombre: "Matemática", bloque: "Ciclo introductorio", correlativas: [] },
-      { id: "elementos", nombre: "Elementos de programación y lógica", bloque: "Ciclo introductorio", correlativas: [] },
+      // Ciclo Introductorio
+      { nombre: "Lectura y escritura académica", bloque: "Ciclo introductorio", correlativas: [] },
+      { nombre: "Matemática", bloque: "Ciclo introductorio", correlativas: [] },
+      { nombre: "Elementos de programación y lógica", bloque: "Ciclo introductorio", correlativas: [] },
 
-      // Núcleo básico
-      { id: "introprog", nombre: "Introducción a la Programación", bloque: "Núcleo básico", correlativas: ["elementos", "matematica", "lectura"] },
-      { id: "orgcomp", nombre: "Organización de Computadoras", bloque: "Núcleo básico", correlativas: ["elementos", "matematica", "lectura"] },
-      { id: "mate1", nombre: "Matemática I", bloque: "Núcleo básico", correlativas: ["elementos", "matematica", "lectura"] },
-      { id: "poo1", nombre: "Programación con Objetos I", bloque: "Núcleo básico", correlativas: ["introprog"] },
-      { id: "bd", nombre: "Bases de Datos", bloque: "Núcleo básico", correlativas: ["elementos", "matematica", "lectura"] },
-      { id: "ed", nombre: "Estructuras de Datos", bloque: "Núcleo básico", correlativas: ["introprog"] },
-      { id: "poo2", nombre: "Programación con Objetos II", bloque: "Núcleo básico", correlativas: ["poo1"] },
+      // Núcleo Básico
+      { nombre: "Introducción a la Programación", bloque: "Núcleo básico", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
+      { nombre: "Organización de Computadoras", bloque: "Núcleo básico", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
+      { nombre: "Matemática I", bloque: "Núcleo básico", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
+      { nombre: "Bases de Datos", bloque: "Núcleo básico", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
+      { nombre: "Programación con Objetos I", bloque: "Núcleo básico", correlativas: ["Introducción a la Programación"] },
+      { nombre: "Estructuras de Datos", bloque: "Núcleo básico", correlativas: ["Introducción a la Programación"] },
+      { nombre: "Programación con Objetos II", bloque: "Núcleo básico", correlativas: ["Programación con Objetos I"] },
 
-      // Núcleo avanzado
-      { id: "redes", nombre: "Redes de Computadoras", bloque: "Núcleo avanzado", correlativas: ["orgcomp"] },
-      { id: "so", nombre: "Sistemas Operativos", bloque: "Núcleo avanzado", correlativas: ["introprog", "orgcomp"] },
-      { id: "pc", nombre: "Programación Concurrente", bloque: "Núcleo avanzado", correlativas: ["ed"] },
-      { id: "mate2", nombre: "Matemática II", bloque: "Núcleo avanzado", correlativas: ["mate1"] },
-      { id: "eis", nombre: "Elementos de Ingeniería de Software", bloque: "Núcleo avanzado", correlativas: ["poo2"] },
-      { id: "ciu", nombre: "Construcción de Interfaces de Usuario", bloque: "Núcleo avanzado", correlativas: ["poo2"] },
-      { id: "ep", nombre: "Estrategias de Persistencia", bloque: "Núcleo avanzado", correlativas: ["bd", "poo2"] },
-      { id: "pf", nombre: "Programación Funcional", bloque: "Núcleo avanzado", correlativas: ["ed"] },
-      { id: "da", nombre: "Desarrollo de Aplicaciones", bloque: "Núcleo avanzado", correlativas: ["eis", "ciu", "ep"] },
-      { id: "lab", nombre: "Lab de SO y Redes", bloque: "Núcleo avanzado", correlativas: ["redes", "so"] },
+      // Núcleo Avanzado (requiere 3 del básico)
+      { nombre: "Redes de Computadoras", bloque: "Núcleo avanzado", correlativas: ["Organización de Computadoras"] },
+      { nombre: "Sistemas Operativos", bloque: "Núcleo avanzado", correlativas: ["Introducción a la Programación", "Organización de Computadoras"] },
+      { nombre: "Programación Concurrente", bloque: "Núcleo avanzado", correlativas: ["Estructuras de Datos"] },
+      { nombre: "Matemática II", bloque: "Núcleo avanzado", correlativas: ["Matemática I"] },
+      { nombre: "Elementos de Ingeniería de Software", bloque: "Núcleo avanzado", correlativas: ["Programación con Objetos II"] },
+      { nombre: "Construcción de Interfaces de Usuario", bloque: "Núcleo avanzado", correlativas: ["Programación con Objetos II"] },
+      { nombre: "Estrategias de Persistencia", bloque: "Núcleo avanzado", correlativas: ["Bases de Datos", "Programación con Objetos II"] },
+      { nombre: "Programación Funcional", bloque: "Núcleo avanzado", correlativas: ["Estructuras de Datos"] },
+      { nombre: "Desarrollo de Aplicaciones", bloque: "Núcleo avanzado", correlativas: ["Elementos de Ingeniería de Software", "Construcción de Interfaces de Usuario", "Estrategias de Persistencia"] },
+      { nombre: "Laboratorio de Sistemas Operativos y Redes", bloque: "Núcleo avanzado", correlativas: ["Redes de Computadoras", "Sistemas Operativos"] },
 
-      // Núcleo complementario (simulado sin correlativas específicas)
-      { id: "comp1", nombre: "Seguridad Informática", bloque: "Núcleo complementario", correlativas: [] },
-      { id: "comp2", nombre: "Taller de Trabajo Universitario", bloque: "Núcleo complementario", correlativas: [] },
-      { id: "comp3", nombre: "Bases de Datos II", bloque: "Núcleo complementario", correlativas: [] }
+      // Núcleo Complementario (solo nombres, desbloqueo condicional puede agregarse después)
+      { nombre: "Seguridad Informática", bloque: "Núcleo complementario", correlativas: [] },
+      { nombre: "Taller de Trabajo Universitario", bloque: "Núcleo complementario", correlativas: [] },
+      { nombre: "Bases de Datos II", bloque: "Núcleo complementario", correlativas: [] },
+
+      // Trabajo final
+      { nombre: "TIP", bloque: "Trabajo final", correlativas: ["Seguridad Informática", "Taller de Trabajo Universitario", "Bases de Datos II"] },
+
+      // Otros requisitos
+      { nombre: "Inglés I", bloque: "Otros", correlativas: ["Elementos de programación y lógica", "Matemática", "Lectura y escritura académica"] },
+      { nombre: "Inglés II", bloque: "Otros", correlativas: ["Inglés I"] },
     ];
 
-    // Obligatorios
-      { id: "ingles1", nombre: "Inglés I", bloque: "Otros", correlativas: ["elementos", "matematica", "lectura"] },
-      { id: "ingles2", nombre: "Inglés II", bloque: "Otros", correlativas: ["ingles1"] },
-    
-      // Trabajo final
-      { id: "tip", nombre: "Trabajo de Inserción Profesional (TIP)", bloque: "Trabajo final", correlativas: [] },
+    const completadas = new Set();
 
-    let completadas = new Set();
-
-    function contarPorBloque(bloque) {
-      return materias.filter(m => m.bloque === bloque && completadas.has(m.id)).length;
+    function puedeDesbloquear(materia) {
+      return materia.correlativas.every(c => completadas.has(c));
     }
 
-    function desbloqueada(materia) {
-      const requisitosCumplidos = materia.correlativas.every(id => completadas.has(id));
-      if (materia.bloque === "Núcleo avanzado") {
-        return requisitosCumplidos && contarPorBloque("Núcleo básico") >= 3;
-      }
-      if (materia.bloque === "Núcleo complementario") {
-        return requisitosCumplidos && contarPorBloque("Núcleo avanzado") >= 5;
-      }
-      if (materia.bloque === "Trabajo final") {
-        return contarPorBloque("Núcleo complementario") >= 3;
-      }
-      return requisitosCumplidos;
-    }
+    function renderMalla() {
+      const contenedor = document.getElementById('contenedor');
+      contenedor.innerHTML = '';
 
-    function render() {
-      const contenedor = document.getElementById("contenedor");
-      contenedor.innerHTML = "";
-      const bloques = [...new Set(materias.map(m => m.bloque))];
-      bloques.forEach(bloque => {
-        const divBloque = document.createElement("div");
-        divBloque.className = "bloque";
-        divBloque.innerHTML = `<h2>${bloque}</h2>`;
-        const divMaterias = document.createElement("div");
-        divMaterias.className = "materias";
-        materias.filter(m => m.bloque === bloque).forEach(m => {
-          const div = document.createElement("div");
-          div.className = "materia";
-          div.textContent = m.nombre;
-          if (completadas.has(m.id)) {
-            div.classList.add("completada");
-          } else if (!desbloqueada(m)) {
-            div.classList.add("bloqueada");
-          } else {
-            div.onclick = () => {
-              completadas.add(m.id);
-              render();
-            };
+      const bloquesOrden = [
+        "Ciclo introductorio",
+        "Núcleo básico",
+        "Núcleo avanzado",
+        "Núcleo complementario",
+        "Trabajo final",
+        "Otros"
+      ];
+
+      for (const bloque of bloquesOrden) {
+        const bloqueMaterias = materias.filter(m => m.bloque === bloque);
+        const bloqueDiv = document.createElement('div');
+        bloqueDiv.className = 'bloque';
+
+        const titulo = document.createElement('h2');
+        titulo.textContent = bloque;
+        bloqueDiv.appendChild(titulo);
+
+        const lista = document.createElement('div');
+        lista.className = 'materias';
+
+        for (const mat of bloqueMaterias) {
+          const btn = document.createElement('div');
+          btn.textContent = mat.nombre;
+          btn.className = 'materia';
+
+          if (!puedeDesbloquear(mat) && !completadas.has(mat.nombre)) {
+            btn.classList.add('bloqueada');
+          } else if (completadas.has(mat.nombre)) {
+            btn.classList.add('completada');
           }
-          divMaterias.appendChild(div);
-        });
-        divBloque.appendChild(divMaterias);
-        contenedor.appendChild(divBloque);
-      });
+
+          btn.onclick = () => {
+            if (!puedeDesbloquear(mat)) return;
+            if (completadas.has(mat.nombre)) {
+              completadas.delete(mat.nombre);
+            } else {
+              completadas.add(mat.nombre);
+            }
+            renderMalla();
+          };
+
+          lista.appendChild(btn);
+        }
+
+        bloqueDiv.appendChild(lista);
+        contenedor.appendChild(bloqueDiv);
+      }
     }
 
-    render();
+    renderMalla();
   </script>
 </body>
 </html>
+
