@@ -279,11 +279,11 @@
             if (!completadas.has(materia.id) && puedeDesbloquear(materia)) {
               completadas.add(materia.id);
               btn.classList.add("completada");
-              localStorage.setItem("completadas", JSON.stringify([...completadas]))
             } else if (puedeDesbloquear(materia)) {
               completadas.delete(materia.id);
               btn.classList = "materia";
             }
+            localStorage.setItem("completadas", JSON.stringify([...completadas]))
             render();
           };
 
