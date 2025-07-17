@@ -193,34 +193,25 @@
         h2.textContent = nombre;
         divBloque.appendChild(h2);
 
-        const titulo = document.createElement("h2");
-        titulo.textContent = bloque;
-        divBloque.appendChild(titulo);
-
-        const materiasDelBloque = materias.filter(m => m.bloque === bloque);
-
-        materiasDelBloque.forEach(materia => {
+        materias.filter(m => m.bloque === nombre).forEach(materia => {
           const btn = document.createElement("button");
-          btn.textContent = materia.nombre;
           btn.className = "materia";
+          btn.textContent = materia.nombre;
 
           if (completadas.has(materia.id)) {
             btn.classList.add("completada");
-          } else if (!puedeDesbloquear(materia)) {
+          } else if (puedeDesbloquear(materia)) {
+            btn.onclick = () => {
+              completadas.add(materia.id);
+              render();
+            };
+          } else {
             btn.classList.add("bloqueada");
             btn.disabled = true;
           }
 
-          btn.onclick = () => {
-            if (!completadas.has(materia.id) && puedeDesbloquear(materia)) {
-              completadas.add(materia.id);
-              render();
-            }
-          };
-
           divBloque.appendChild(btn);
         });
-
         contenedor.appendChild(divBloque);
       }
     }
